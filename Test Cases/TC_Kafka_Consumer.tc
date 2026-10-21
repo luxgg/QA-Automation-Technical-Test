@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC_Kafka_Consumer</description>
+   <name>TC_Kafka_Consumer</name>
+   <tag></tag>
+   <integratedEntity>
+      <productName>TESTOPS</productName>
+      <properties>
+         <entry>
+            <key>lastModifiedByName</key>
+            <value>Nicky Lianto</value>
+         </entry>
+         <entry>
+            <key>lastModifiedByUuid</key>
+            <value>7ec560db-9a18-4e07-8c68-718f2db67d4a</value>
+         </entry>
+      </properties>
+      <type>TESTCASE</type>
+   </integratedEntity>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>5a34f13f-9ec5-4aa7-a829-72b7f9c0c6dc</testCaseGuid>
+</TestCaseEntity>

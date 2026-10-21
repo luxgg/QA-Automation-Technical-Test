@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>TC_REST_Producer_Consumer</description>
+   <name>TC_REST_Producer_Consumer</name>
+   <tag></tag>
+   <integratedEntity>
+      <productName>TESTOPS</productName>
+      <properties>
+         <entry>
+            <key>lastModifiedByName</key>
+            <value>Nicky Lianto</value>
+         </entry>
+         <entry>
+            <key>lastModifiedByUuid</key>
+            <value>7ec560db-9a18-4e07-8c68-718f2db67d4a</value>
+         </entry>
+      </properties>
+      <type>TESTCASE</type>
+   </integratedEntity>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>aa0514ad-4a26-41e6-9f37-ecf56b72bbcb</testCaseGuid>
+</TestCaseEntity>
