@@ -1,60 +1,116 @@
 # QA Automation Technical Test — Katalon
 
-One Katalon Studio project covering (1) REST API producer and consumer and (2) Kafka consumer validation.
+This project contains automated REST API and Kafka consumer testing using Katalon Studio.
 
-## Requirements
-- Katalon Studio (Windows; project uses Groovy scripts)
-- Python 3 installed and on PATH
-- Docker Desktop running, Docker CLI on PATH
-- Git (for publishing)
+## Tools and Technologies
 
-## 1. Start local REST API
-Open PowerShell in this repository:
+- Katalon Studio
+- Groovy
+- REST API (JSONPlaceholder)
+- Apache Kafka
+- Java KafkaConsumer
+- GitHub
 
-```powershell
-python config/mock_api.py
+## Test Scenarios
+
+### 1. REST API Producer and Consumer
+
+Test Case: `TC_REST_Producer_Consumer`
+
+Endpoint: `https://jsonplaceholder.typicode.com/posts`
+
+**Test Steps:**
+1. Send a POST request with JSON data.
+2. Verify the POST response status code is 201 (Created).
+3. Send a GET request to `/posts/1`.
+4. Verify the GET response status code is 200 (OK).
+
+**Expected Result:**
+- POST request returns HTTP 201.
+- GET request returns HTTP 200.
+- Test case passes when both status code validations succeed.
+
+**Note:** JSONPlaceholder is a mock REST API. POST requests do not permanently save data, so the GET request validates an existing resource rather than retrieving the newly created POST data.
+
+### 2. Kafka Consumer Testing
+
+Test Case: `TC_Kafka_Consumer`
+
+**Kafka Configuration:**
+- Bootstrap Server: `localhost:9092`
+- Topic: `qa-test-topic`
+- Consumer Group: `katalon-qa-test`
+- Auto Offset Reset: `earliest`
+
+**Test Steps:**
+1. Start the local Apache Kafka broker.
+2. Create the Kafka topic `qa-test-topic`.
+3. Send a message containing `Test Message 123` using Kafka Console Producer.
+4. Run `TC_Kafka_Consumer` in Katalon Studio.
+5. The KafkaConsumer subscribes to the topic and polls for messages.
+6. Validate that a received message contains `Test Message 123`.
+
+**Expected Result:**
+- Kafka consumer successfully receives the expected message.
+- The assertion passes when the expected message is found.
+- The consumer connection is closed after execution.
+
+## How to Run
+
+### REST API Testing
+1. Open the project in Katalon Studio.
+2. Open `Test Cases/TC_REST_Producer_Consumer`.
+3. Click Run.
+4. Check the execution result in Log Viewer.
+
+### Kafka Testing
+
+1. Start Apache Kafka locally on port 9092.
+2. Open Command Prompt in the Kafka installation directory.
+3. Create the topic:
+
+```cmd
+bin\windows\kafka-topics.bat --create --if-not-exists --topic qa-test-topic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 ```
 
-Leave it running. This is an in-memory API on `http://127.0.0.1:8088`. `POST /messages` saves a message and `GET /messages/{id}` reads it back. This avoids using a public fake API that does not actually persist POSTs.
+4. Start Kafka Console Producer:
 
-## 2. Start Kafka
-Open a **second** PowerShell window:
-
-```powershell
-docker run -d --name kafka-test -p 9092:9092 apache/kafka:4.3.1
-docker exec kafka-test /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --if-not-exists --topic qa-technical-test --partitions 1 --replication-factor 1
+```cmd
+bin\windows\kafka-console-producer.bat --topic qa-test-topic --bootstrap-server localhost:9092
 ```
 
-If `kafka-test` already exists and is stopped, use `docker start kafka-test` instead of `docker run`.
-Wait until the broker is ready; check with `docker logs kafka-test`.
+5. Enter the following message and press Enter:
 
-## 3. Open and run Katalon
-1. Open Katalon Studio > File > Open Project, select `QA-Automation-Technical-Test.prj`.
-2. Open `Test Suites/TS_All_Tests` and click Run.
-3. Both test cases should pass if Python API, Kafka, and Docker are running.
-
-### Test cases
-- `TC_REST_Producer_Consumer`: Katalon POSTs unique JSON to local API (expects 201), then GETs it (expects 200) and validates `id` and `message`.
-- `TC_Kafka_Consumer`: Katalon launches Kafka's official console consumer inside Docker and reads its messages; a separate console producer sends a unique JSON event; Katalon validates that its consumer received the event with matching ID, event type, and amount.
-
-**Implementation note:** The Kafka test uses the official Kafka CLI consumer invoked by Katalon's Groovy `ProcessBuilder`, rather than a direct Java KafkaConsumer client. This still tests message consumption under Katalon control, but disclose this distinction if an assessor specifically requires the Kafka Java consumer library.
-
-## 4. Upload to public GitHub
-Create a **public** repository on github.com (do not initialize with a README). In this project directory:
-
-```powershell
-git init
-git add .
-git commit -m "Add Katalon REST API and Kafka consumer tests"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/QA-Automation-Technical-Test.git
-git push -u origin main
+```text
+Test Message 123
 ```
 
-Replace `YOUR_USERNAME` with your GitHub username. Submit your actual public repository URL, not this example.
+6. Open `Test Cases/TC_Kafka_Consumer` in Katalon Studio.
+7. Click Run and check the execution result.
 
-## Notes
-- Tested execution is **not claimed**; run locally and record real test results before submitting.
-- The local REST API is intentionally in-memory; restarting it clears records.
-- Kafka topic retains messages across runs; the test uses a unique UUID to find its own event.
-- Docker CLI must be available to Katalon via PATH. If Katalon was already open when Docker was installed, restart Katalon.
+**Dependency:** The Kafka Java client libraries must be available to Katalon Studio.
+
+## Test Execution Results
+
+Both test cases were executed successfully in Katalon Studio.
+
+- `TC_REST_Producer_Consumer`: PASSED
+- `TC_Kafka_Consumer`: PASSED
+
+## Repository Structure
+
+```text
+QA-Automation-Technical-Test/
+├── Scripts/
+│   ├── TC_REST_Producer_Consumer/
+│   └── TC_Kafka_Consumer/
+├── Test Cases/
+├── Profiles/
+├── config/
+├── QA-Automation-Technical-Test.prj
+└── README.md
+```
+
+## Conclusion
+
+This project demonstrates REST API request automation and Kafka message consumption validation using Katalon Studio and Groovy.
